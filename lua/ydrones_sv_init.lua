@@ -1,0 +1,13 @@
+resource.AddFile("sound/ydrones/drone_loop.wav")
+resource.AddFile("materials/entities/ydrones_black.png")
+resource.AddFile("materials/entities/ydrones_white.png")
+resource.AddFile("materials/entities/ydrones_medic.png")
+resource.AddFile("materials/entities/ydrones_police.png")
+resource.AddFile("materials/entities/ydrones_delivery.png")
+resource.AddFile("materials/entities/ydrones_gold.png")
+resource.AddFile("materials/entities/ydrones_spy.png")
+resource.AddFile("materials/entities/ydrones_military.png")
+resource.AddFile("materials/entities/ydrones_bomber.png")
+resource.AddWorkshop("1991832497")
+
+print("[yDrones] Loaded!")
