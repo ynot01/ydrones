@@ -43,12 +43,19 @@ hook.Add("CalcView", "yDrones:CalcView", function(ply, pos, angles, fov)
         my_drone = drone
         -- screenpos_lookpos = (LocalPlayer():EyeAngles():Forward() + EyePos()):ToScreen()
         local dr_ang = LocalPlayer():EyeAngles()
+        local tr = util.TraceLine({
+            start = drone:GetPos() + drone:OBBCenter(),
+            endpos = drone:GetPos() + (dr_ang:Up() * 1) + (dr_ang:Forward() * 7.9) + (dr_ang:Right() * -3.006),
+            mask = MASK_ALL,
+            filter = {drone, ply},
+            hitclientonly = true
+        })
         local view = {
-            origin = drone:GetPos() + (dr_ang:Up() * 1) + (dr_ang:Forward() * 7) + (dr_ang:Right() * -2.9) ,
+            origin = tr.Hit and (tr.HitPos - ((tr.HitPos - tr.StartPos) * 0.0265)) or tr.HitPos,
             angles = dr_ang,
             fov = 100,
             drawviewer = true,
-            znear = 1
+            znear = 0.1
         }
         local remote = LocalPlayer():GetWeapon("weapon_ydrones_remote")
         if IsValid(remote) then
@@ -97,7 +104,7 @@ hook.Add("HUDPaint", "yDrones:DroneHUD", function()
     -- draw.SimpleTextOutlined("•", "yDrones:FontNormal", screenpos_lookpos.x, screenpos_lookpos.y, drone_cursor_inside, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, drone_cursor_outline)
 end)
 
-hook.Add("CreateMove", "yDrones:Think", function(cmd)
+hook.Add("CreateMove", "yDrones:CreateMove", function(cmd)
     if !IsValid(my_drone) or my_drone:IsDormant() then
         attacking = false
         return

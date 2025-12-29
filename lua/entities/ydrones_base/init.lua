@@ -73,19 +73,8 @@ end
 
 local vec_zero = Vector(0,0,0)
 -- local ang_zero = Angle(0,0,0)
-local duck_vel = Vector(0,0,-1)
 local default_playerview_offset = Vector(0,0,64)
-hook.Add("SetupMove", "yDrones:ServerReadMove", function(ply, mv, cmd)
-    ply.LastMove = mv:GetVelocity():GetNormalized()
-    if cmd:KeyDown(IN_DUCK) then
-        ply.LastMove = ply.LastMove + duck_vel
-    end
-    if ply.drone_exit_stun then
-        mv:SetVelocity(vec_zero)
-        ply.drone_exit_stun = false
-    end
-    -- print(ply.LastMove)
-end)
+local default_playerview_offset_ducked = Vector(0,0,28)
 
 hook.Add("PlayerDeath", "yDrones:Death", function(victim, inflictor, attacker)
     for k,v in ents.Iterator() do
@@ -221,15 +210,18 @@ function ENT:MakePilot(ply)
     self.pilot_ang = ply:GetAngles()
     ply:GodEnable()
     ply:SetViewOffset(vec_zero)
+    ply:SetViewOffsetDucked(vec_zero)
     ply:SetMoveType(MOVETYPE_NOCLIP)
     ply:SetNoDraw(true)
     ply:SetModelScale(0.001, 0.00001)
+    ply.piloting_drone = self
 end
 
 function ENT:RemovePilot(ply)
     if !IsValid(ply) then
         ply = self:GetNWEntity("pilot", NULL)
     end
+    ply.piloting_drone = nil
     self:SetNWEntity("pilot", NULL)
     if IsValid(self.fakeplayer) then
         self.fakeplayer:Remove()
@@ -238,6 +230,7 @@ function ENT:RemovePilot(ply)
     ply:SetPos(self.pilot_pos)
     ply:SetEyeAngles(self.pilot_ang)
     ply:SetViewOffset(default_playerview_offset)
+    ply:SetViewOffsetDucked(default_playerview_offset_ducked)
     ply:SetMoveType(MOVETYPE_WALK)
     ply:SetNoDraw(false)
     ply:SetModelScale(1, 0.00001)
