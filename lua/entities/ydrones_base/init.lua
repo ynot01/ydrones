@@ -127,6 +127,7 @@ function ENT:Think()
                         self:FireBullets({
                             Attacker = ply,
                             Inflictor = self,
+                            Damage = 0,
                             Callback = function(attacker, tr, dmginfo)
                                 tr.Entity:EmitSound("ambient/office/zap1.wav", 65, 100)
                                 if tr.Hit and tr.Entity and tr.Entity:IsPlayer() then
@@ -164,6 +165,7 @@ function ENT:Think()
                         self:FireBullets({
                             Attacker = ply,
                             Inflictor = self,
+                            Damage = 0,
                             Callback = function(attacker, tr, dmginfo)
                                 if tr.Hit and tr.Entity then
                                     tr.Entity:SetHealth(math.Clamp(tr.Entity:Health() - self.GunDamage, 0, tr.Entity:GetMaxHealth()))
