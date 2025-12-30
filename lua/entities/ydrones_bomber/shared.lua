@@ -21,14 +21,15 @@ Skins:
 ENT.DroneModel = "models/anthon/drone_body.mdl"
 ENT.DroneSkin = 8
 ENT.BaseSpeed = 10
-ENT.BaseWeight = 40
+ENT.BaseWeight = 150
 ENT.DroneHumSoundFile = "ydrones/drone_loop.wav"
 ENT.DroneHumPitchMult = 0.8
 ENT.DroneHumVolume = 1
-ENT.DroneHumSNDLVL = 80
+ENT.DroneHumSNDLVL = 70
 ENT.HasGun = false
 ENT.GunDamage = 1
 ENT.GunCooldown = 1
 ENT.GunRecoil = 1
 ENT.DroneHealth = 60
 ENT.Waterproof = true
+ENT.ExplodeOnCollide = true

@@ -20,7 +20,7 @@ function ENT:Initialize()
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
-    -- self:SetUseType( SIMPLE_USE )
+    self:SetUseType( SIMPLE_USE )
 
     local phys = self:GetPhysicsObject()
     
@@ -54,7 +54,10 @@ function ENT:ToggleEngine()
 end
 
 function ENT:Use( activator, caller )
-    -- self:ToggleEngine()
+    for k,v in ipairs(ents.FindInSphere(self:GetPos(), 128)) do
+        if v == self then continue end
+        v:Use(activator, caller)
+    end
 end
 
 function ENT:RefreshUpgrades()
@@ -112,7 +115,34 @@ function ENT:Think()
                 self.last_shot = CurTime()
                 if self.HasGun then
                     phys:AddVelocity(ply:GetAimVector() * -5 * self.GunRecoil)
-                    if self.GunDamage > 0 then
+                    if self.GunDamage == 0 then
+                        self:EmitSound("ambient/office/zap1.wav", 65, 100, 1, CHAN_WEAPON)
+                        self:FireBullets({
+                            Attacker = ply,
+                            Inflictor = self,
+                            Callback = function(attacker, tr, dmginfo)
+                                tr.Entity:EmitSound("ambient/office/zap1.wav", 65, 100)
+                                if tr.Hit and tr.Entity and tr.Entity:IsPlayer() then
+                                    local oldrunspeed = tr.Entity:GetRunSpeed()
+                                    local oldwalkspeed = tr.Entity:GetWalkSpeed()
+                                    local oldslowwalkspeed = tr.Entity:GetSlowWalkSpeed()
+                                    tr.Entity:SetRunSpeed(50)
+                                    tr.Entity:SetWalkSpeed(50)
+                                    tr.Entity:SetSlowWalkSpeed(50)
+                                    timer.Simple(self.GunCooldown * 0.4, function()
+                                        if !IsValid(tr.Entity) then return end
+                                        tr.Entity:SetRunSpeed(oldrunspeed)
+                                        tr.Entity:SetWalkSpeed(oldwalkspeed)
+                                        tr.Entity:SetSlowWalkSpeed(oldslowwalkspeed)
+                                    end)
+                                end
+                                return true, false
+                            end,
+                            Src = ply:EyePos() + ply:GetAimVector() * 5,
+                            Dir = ply:GetAimVector(),
+                            IgnoreEntity = self
+                        })
+                    elseif self.GunDamage > 0 then
                         self:EmitSound("weapons/m249/m249-1.wav", 80, 100, 1, CHAN_WEAPON)
                         self:FireBullets({
                             Attacker = ply,
@@ -135,7 +165,6 @@ function ENT:Think()
                             end,
                             Src = ply:EyePos() + ply:GetAimVector() * 5,
                             Dir = ply:GetAimVector(),
-                            Spread = Vector(2,2),
                             IgnoreEntity = self
                         })
                     end
@@ -150,8 +179,8 @@ function ENT:Think()
                             Inflictor = self,
                             Damage = 0,
                             Callback = function(attacker, tr, dmginfo)
-                                if tr.Hit and tr.Entity and (tr.HitPos - self:GetPos()):LengthSqr() < 10000 then
-                                    self.current_rope = constraint.Rope(self, tr.Entity, 0, 0, vec_zero, tr.HitPos - tr.Entity:GetPos(), 100, 0, 5000, 3)
+                                if tr.Hit and tr.Entity and (tr.HitPos - self:GetPos()):LengthSqr() < 2500 then
+                                    self.current_rope = constraint.Rope(self, tr.Entity, 0, 0, vec_zero, tr.HitPos - tr.Entity:GetPos(), 50, 0, 5000, 1, nil, true)
                                 end
                                 return false, false
                             end,
@@ -262,7 +291,9 @@ function ENT:OnTakeDamage(dmginfo)
         self.dying = true
         local explode = ents.Create( "env_explosion" )
         explode:SetPos( self:GetPos() )
-        explode:SetOwner( dmginfo:GetAttacker() )
+        if IsValid(self.pilot) then
+            explode:SetOwner( self.pilot )
+        end
         explode:Spawn()
         explode:SetKeyValue( "iMagnitude", "0" )
         explode:Fire( "Explode", 0, 0 )
@@ -274,7 +305,18 @@ local BounceSound = Sound( "physics/metal/metal_box_impact_hard1.wav" )
 function ENT:PhysicsCollide( data, physobj )
     -- Play sound on bounce
     if data.Speed > 250 and data.DeltaTime > 0.2 then
-
+        if true then
+            self.dying = true
+            local explode = ents.Create( "env_explosion" )
+            explode:SetPos( self:GetPos() )
+            if IsValid(self.pilot) then
+                explode:SetOwner( self.pilot )
+            end
+            explode:Spawn()
+            explode:SetKeyValue( "iMagnitude", "100" )
+            explode:Fire( "Explode", 0, 0 )
+            self:Remove()
+        end
         sound.Play( BounceSound, self:GetPos(), 75, math.random( 90, 110 ), math.Clamp( data.Speed / 1500, 0, 1 ) )
         local dmginfo = DamageInfo()
         dmginfo:SetDamage( data.Speed * 0.02 )

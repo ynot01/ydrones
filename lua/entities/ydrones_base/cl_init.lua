@@ -55,7 +55,7 @@ hook.Add("CalcView", "yDrones:CalcView", function(ply, pos, angles, fov)
             angles = dr_ang,
             fov = 100,
             drawviewer = true,
-            znear = 0.1
+            znear = 1
         }
         local remote = LocalPlayer():GetWeapon("weapon_ydrones_remote")
         if IsValid(remote) then
