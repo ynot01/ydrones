@@ -56,8 +56,15 @@ end
 function ENT:Use( activator, caller )
     for k,v in ipairs(ents.FindInSphere(self:GetPos(), 128)) do
         if v == self then continue end
+        if hook.Run("PlayerUse", activator, v) == false then continue end
         v:Use(activator, caller)
     end
+    -- if !IsValid(self) then return end
+    -- local phys = self:GetPhysicsObject()
+    -- if IsValid(phys) then
+    --     phys:EnableMotion(true)
+    --     phys:Wake()
+    -- end
 end
 
 function ENT:RefreshUpgrades()
@@ -305,7 +312,7 @@ local BounceSound = Sound( "physics/metal/metal_box_impact_hard1.wav" )
 function ENT:PhysicsCollide( data, physobj )
     -- Play sound on bounce
     if data.Speed > 250 and data.DeltaTime > 0.2 then
-        if true then
+        if data.Speed > 500 and self.ExplodeOnCollide then
             self.dying = true
             local explode = ents.Create( "env_explosion" )
             explode:SetPos( self:GetPos() )
@@ -313,9 +320,10 @@ function ENT:PhysicsCollide( data, physobj )
                 explode:SetOwner( self.pilot )
             end
             explode:Spawn()
-            explode:SetKeyValue( "iMagnitude", "100" )
+            explode:SetKeyValue( "iMagnitude", "200" )
             explode:Fire( "Explode", 0, 0 )
             self:Remove()
+            return
         end
         sound.Play( BounceSound, self:GetPos(), 75, math.random( 90, 110 ), math.Clamp( data.Speed / 1500, 0, 1 ) )
         local dmginfo = DamageInfo()
