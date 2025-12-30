@@ -56,6 +56,7 @@ end
 function ENT:Use( activator, caller )
     for k,v in ipairs(ents.FindInSphere(self:GetPos(), 128)) do
         if v == self then continue end
+        if v.DroneModel then continue end
         if hook.Run("PlayerUse", activator, v) == false then continue end
         v:Use(activator, caller)
     end
