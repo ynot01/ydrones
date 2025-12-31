@@ -54,7 +54,7 @@ function ENT:ToggleEngine()
 end
 
 function ENT:Use( activator, caller )
-    for k,v in ipairs(ents.FindInSphere(self:GetPos(), 128)) do
+    for k,v in ipairs(ents.FindInSphere(self:GetPos(), 16)) do
         if v == self then continue end
         if v.DroneModel then continue end
         if hook.Run("PlayerUse", activator, v) == false then continue end
@@ -118,7 +118,14 @@ function ENT:Think()
                 self:SetNWBool("lighton", !self:GetNWBool("lighton", false))
                 ply:Flashlight(false)
             end
-            ply:SetPos(self:GetPos())
+            local dr_ang = ply:EyeAngles()
+            local ptr = util.TraceLine({
+                start = self:GetPos() + self:OBBCenter(),
+                endpos = self:GetPos() + (dr_ang:Up() * 1) + (dr_ang:Forward() * 7.9) + (dr_ang:Right() * -3.006),
+                mask = MASK_ALL,
+                filter = {self, ply}
+            })
+            ply:SetPos( ptr.Hit and (ptr.HitPos - ((ptr.HitPos - ptr.StartPos) * 0.0265)) or ptr.HitPos )
             if ply.drone_attacking and self.last_shot < CurTime() - self.GunCooldown then
                 self.last_shot = CurTime()
                 if self.HasGun then
