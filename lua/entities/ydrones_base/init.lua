@@ -190,7 +190,7 @@ function ENT:Think()
                             Damage = 0,
                             Callback = function(attacker, tr, dmginfo)
                                 if tr.Hit and tr.Entity and (tr.HitPos - self:GetPos()):LengthSqr() < 2500 then
-                                    self.current_rope = constraint.Rope(self, tr.Entity, 0, 0, vec_zero, tr.HitPos - tr.Entity:GetPos(), 50, 0, 5000, 1, nil, true)
+                                    self.current_rope = constraint.Rope(self, tr.Entity, 0, 0, vec_zero, tr.HitPos - tr.Entity:GetPos(), 50, 0, 5000, 1, nil, false)
                                 end
                                 return false, false
                             end,
