@@ -74,7 +74,7 @@ function ENT:RefreshUpgrades()
         self:SetBodygroup(bodygroup.id, 0)
     end
     if self.HasGun then
-        if self.GunDamage > 0 then
+        if self.GunDamage >= 0 then
             self:SetBodygroup(1, 1)
         else
             self:SetBodygroup(2, 1)
