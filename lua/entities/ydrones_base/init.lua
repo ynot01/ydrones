@@ -320,9 +320,10 @@ end
 
 local BounceSound = Sound( "physics/metal/metal_box_impact_hard1.wav" )
 function ENT:PhysicsCollide( data, physobj )
+    if self.dying then return end
     -- Play sound on bounce
     if data.Speed > 250 and data.DeltaTime > 0.2 then
-        if data.Speed > 500 and self.ExplodeOnCollide then
+        if self.ExplodeOnCollide then
             self.dying = true
             local explode = ents.Create( "env_explosion" )
             explode:SetPos( self:GetPos() )
