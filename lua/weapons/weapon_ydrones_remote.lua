@@ -6,7 +6,7 @@ SWEP.Instructions = "Primary fire at an unsynced drone to sync to it. Secondary 
 
 SWEP.Category = "ynot01's Drones"
 
-SWEP.Slot = 2
+SWEP.Slot = 0
 SWEP.SlotPos = 0
 
 SWEP.Spawnable = true

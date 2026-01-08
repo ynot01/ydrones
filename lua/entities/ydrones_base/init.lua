@@ -145,7 +145,7 @@ function ENT:Think()
                                     tr.Entity:SetRunSpeed(50)
                                     tr.Entity:SetWalkSpeed(50)
                                     tr.Entity:SetSlowWalkSpeed(50)
-                                    timer.Simple(self.GunCooldown * 0.4, function()
+                                    timer.Simple(self.GunCooldown * 0.25, function()
                                         if !IsValid(tr.Entity) then return end
                                         tr.Entity:SetRunSpeed(oldrunspeed)
                                         tr.Entity:SetWalkSpeed(oldwalkspeed)
