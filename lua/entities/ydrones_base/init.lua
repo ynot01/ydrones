@@ -140,13 +140,13 @@ function ENT:Think()
                                 tr.Entity:EmitSound("ambient/office/zap1.wav", 65, 100)
                                 if tr.Hit and tr.Entity and tr.Entity:IsPlayer() then
                                     tr.Entity:SetRunSpeed(tr.Entity:GetRunSpeed() * 0.1)
-                                    tr.Entity:SetWalkSpeed(tr.Entity:GetRunSpeed() * 0.1)
-                                    tr.Entity:SetSlowWalkSpeed(tr.Entity:GetRunSpeed() * 0.1)
+                                    tr.Entity:SetWalkSpeed(tr.Entity:GetWalkSpeed() * 0.1)
+                                    tr.Entity:SetSlowWalkSpeed(tr.Entity:GetSlowWalkSpeed() * 0.1)
                                     timer.Simple(self.GunCooldown * 0.25, function()
                                         if !IsValid(tr.Entity) then return end
                                         tr.Entity:SetRunSpeed(tr.Entity:GetRunSpeed() / 0.1)
-                                        tr.Entity:SetWalkSpeed(tr.Entity:GetRunSpeed() / 0.1)
-                                        tr.Entity:SetSlowWalkSpeed(tr.Entity:GetRunSpeed() / 0.1)
+                                        tr.Entity:SetWalkSpeed(tr.Entity:GetWalkSpeed() / 0.1)
+                                        tr.Entity:SetSlowWalkSpeed(tr.Entity:GetSlowWalkSpeed() / 0.1)
                                     end)
                                 end
                                 return true, false
