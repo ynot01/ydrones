@@ -87,6 +87,12 @@ local vec_zero = Vector(0,0,0)
 local default_playerview_offset = Vector(0,0,64)
 local default_playerview_offset_ducked = Vector(0,0,28)
 
+hook.Add("ScalePlayerDamage", "yDrones:PreventFall", function(ply, hitgroup, dmginfo)
+    if !ply.drone_exit_stun then return end
+    if dmginfo:GetDamageType() != DMG_FALL then return end
+    dmginfo:ScaleDamage(0)
+end)
+
 hook.Add("PlayerDeath", "yDrones:Death", function(victim, inflictor, attacker)
     for k,v in ents.Iterator() do
         if v:GetNWEntity("pilot", NULL) != victim then continue end
