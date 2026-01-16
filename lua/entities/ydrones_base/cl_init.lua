@@ -36,7 +36,7 @@ local attacking = false
 local my_drone = NULL
 -- local screenpos_lookpos = nil
 hook.Add("CalcView", "yDrones:CalcView", function(ply, pos, angles, fov)
-    for k,v in ents.Iterator() do
+    for k,v in ipairs(ents.FindByClass("ydrones_*")) do
         if v:GetNWEntity("pilot", NULL) != LocalPlayer() then continue end
         local drone = v
         if drone:IsDormant() then continue end
