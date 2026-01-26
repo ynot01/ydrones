@@ -264,6 +264,9 @@ function ENT:MakePilot(ply)
     ply:SetNoDraw(true)
     ply:SetModelScale(0.001, 0.00001)
     ply.piloting_drone = self
+    for k,v in ipairs(ents.FindByClass("weapon_kali096")) do
+        v:UpdateClient()
+    end
 end
 
 function ENT:RemovePilot(ply)
