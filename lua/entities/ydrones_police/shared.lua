@@ -30,6 +30,6 @@ ENT.HasGun = true
 ENT.GunDamage = 0
 ENT.GunCooldown = 10
 ENT.GunRecoil = 1
-ENT.DroneHealth = 25
+ENT.DroneHealth = 50
 ENT.Waterproof = false
 ENT.ExplodeOnCollide = false
