@@ -18,6 +18,11 @@ function ENT:Initialize()
     self:SetMaxHealth(9999999)
     self:SetHealth(9999999)
     self:ResetSequence(self:LookupSequence("idle_camera"))
+    self:AddEFlags( EFL_FORCE_CHECK_TRANSMIT )
+end
+
+function ENT:UpdateTransmitState()
+    return TRANSMIT_ALWAYS
 end
 
 function ENT:SetRealPlayer(ply, drone)
