@@ -288,6 +288,9 @@ function ENT:RemovePilot(ply)
     ply:SetModelScale(1, 0.00001)
     ply:GodDisable()
     ply.drone_exit_stun = true
+    for k,v in ipairs(ents.FindByClass("weapon_kali096")) do
+        v:UpdateClient()
+    end
 end
 
 function ENT:OnRemove()
