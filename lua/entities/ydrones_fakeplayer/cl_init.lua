@@ -9,6 +9,10 @@ end
 function ENT:Draw()
 
     if self:IsDormant() then return end
+    if !IsValid(self.headset) then
+        self.headset = ClientsideModel("models/Items/battery.mdl")
+        self.headset:Spawn()
+    end
 
     self:DrawModel()
 
@@ -52,5 +56,7 @@ function ENT:Draw()
 end
 
 function ENT:OnRemove()
-    self.headset:Remove()
+    if IsValid(self.headset) then
+        self.headset:Remove()
+    end
 end
