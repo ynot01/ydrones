@@ -93,13 +93,27 @@ hook.Add("ScalePlayerDamage", "yDrones:PreventFall", function(ply, hitgroup, dmg
     dmginfo:ScaleDamage(0)
 end)
 
-hook.Add("PlayerDeath", "yDrones:Death", function(victim, inflictor, attacker)
-    for k,v in ents.Iterator() do
-        if v:GetNWEntity("pilot", NULL) != victim then continue end
-        local drone = v
-        drone:RemovePilot(victim)
+local ply_death_func = function(ply)
+    -- this checks every drone to see if they belonged to the remote we hold, then damages it
+    -- have to do it in this backwards way, the remote's NWEntity gets unset before these hooks are called
+    local drones_with_remotes = {}
+    for _,v in ents.Iterator() do
+        if !v:GetNWEntity("remote", NULL):IsValid() then continue end
+        table.insert(drones_with_remotes, v)
     end
-end)
+    for _,wep in ipairs(ply:GetWeapons()) do
+        if wep:GetClass() != "weapon_ydrones_remote" then continue end
+        for _,drone in ipairs(drones_with_remotes) do
+            if drone:GetNWEntity("remote", NULL) == wep then
+                drone:TakeDamage(999999)
+                return
+            end
+        end
+    end
+end
+
+hook.Add("PlayerDeath", "yDrones:Death", ply_death_func)
+hook.Add("PlayerSilentDeath", "yDrones:SilentDeath", ply_death_func)
 
 ENT.current_rope = nil
 ENT.last_shot = -999
