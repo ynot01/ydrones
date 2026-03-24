@@ -340,8 +340,22 @@ function ENT:PhysicsCollide( data, physobj )
                 explode:SetOwner( self.pilot )
             end
             explode:Spawn()
-            explode:SetKeyValue( "iMagnitude", "200" )
+            explode:SetKeyValue( "iMagnitude", "0" )
             explode:Fire( "Explode", 0, 0 )
+            for _,ent in ipairs(ents.FindInSphere(self:GetPos(), 200)) do
+                local dmginfo = DamageInfo()
+                local dmg = 200 - self:GetPos():Distance(ent:GetPos())
+                if dmg <= 0 then continue end
+                dmginfo:SetDamage(dmg)
+                if IsValid(self.pilot) then
+                    dmginfo:SetAttacker(self.pilot)
+                else
+                    dmginfo:SetAttacker(self)
+                end
+                dmginfo:SetInflictor(self)
+                dmginfo:SetDamageType(DMG_BLAST)
+                ent:TakeDamageInfo(dmginfo)
+            end
             self:Remove()
             return
         end
