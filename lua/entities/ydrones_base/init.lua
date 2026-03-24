@@ -358,7 +358,7 @@ function ENT:PhysicsCollide( data, physobj )
             explode:Fire( "Explode", 0, 0 )
             for _,ent in ipairs(ents.FindInSphere(self:GetPos(), 200)) do
                 local dmginfo = DamageInfo()
-                local dmg = 200 - self:GetPos():Distance(ent:GetPos())
+                local dmg = 200 * (math.max(-(math.pow(self:GetPos():DistToSqr(ent:GetPos()), 2) / math.pow(200, 4)) + 1, 0))
                 if dmg <= 0 then continue end
                 dmginfo:SetDamage(dmg)
                 if IsValid(self:GetNWEntity("pilot", NULL)) then
