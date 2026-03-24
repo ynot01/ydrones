@@ -317,8 +317,8 @@ function ENT:OnTakeDamage(dmginfo)
         self.dying = true
         local explode = ents.Create( "env_explosion" )
         explode:SetPos( self:GetPos() )
-        if IsValid(self.pilot) then
-            explode:SetOwner( self.pilot )
+        if IsValid(self:GetNWEntity("pilot", NULL)) then
+            explode:SetOwner( self:GetNWEntity("pilot", NULL) )
         end
         explode:Spawn()
         explode:SetKeyValue( "iMagnitude", "0" )
@@ -336,8 +336,8 @@ function ENT:PhysicsCollide( data, physobj )
             self.dying = true
             local explode = ents.Create( "env_explosion" )
             explode:SetPos( self:GetPos() )
-            if IsValid(self.pilot) then
-                explode:SetOwner( self.pilot )
+            if IsValid(self:GetNWEntity("pilot", NULL)) then
+                explode:SetOwner( self:GetNWEntity("pilot", NULL) )
             end
             explode:Spawn()
             explode:SetKeyValue( "iMagnitude", "0" )
@@ -347,8 +347,8 @@ function ENT:PhysicsCollide( data, physobj )
                 local dmg = 200 - self:GetPos():Distance(ent:GetPos())
                 if dmg <= 0 then continue end
                 dmginfo:SetDamage(dmg)
-                if IsValid(self.pilot) then
-                    dmginfo:SetAttacker(self.pilot)
+                if IsValid(self:GetNWEntity("pilot", NULL)) then
+                    dmginfo:SetAttacker(self:GetNWEntity("pilot", NULL))
                 else
                     dmginfo:SetAttacker(self)
                 end
